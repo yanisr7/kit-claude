@@ -2,7 +2,7 @@
 # Installation du kit Claude — à lancer une seule fois :  bash ~/kit-claude/setup.sh
 set -e
 KIT="$(cd "$(dirname "$0")" && pwd)"
-VAULT="$HOME/Documents/Cerveau"
+VAULT="$HOME/Cerveau"
 ok()   { printf "\033[32m✓\033[0m %s\n" "$1"; }
 step() { printf "\n\033[1m▸ %s\033[0m\n" "$1"; }
 
@@ -35,15 +35,7 @@ step "4/7 Profil Claude (CLAUDE.md + plugins de skills)"
 mkdir -p ~/.claude
 [ -f ~/.claude/CLAUDE.md ] && cp ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.bak
 cp "$KIT/claude/CLAUDE.md" ~/.claude/CLAUDE.md
-python3 - "$KIT/claude/settings.json" <<'PY'
-import json, os, sys
-p = os.path.expanduser("~/.claude/settings.json")
-cur = json.load(open(p)) if os.path.exists(p) else {}
-new = json.load(open(sys.argv[1]))
-for k, v in new.items():
-    cur[k] = {**cur.get(k, {}), **v} if isinstance(v, dict) else v
-json.dump(cur, open(p, "w"), indent=2)
-PY
+python3 "$KIT/claude/merge_settings.py" "$KIT/claude/settings.json"
 for m in anthropics/claude-plugins-official anthropics/skills coreyhaines31/marketingskills; do
   claude plugin marketplace add "$m" >/dev/null 2>&1 || true
 done

@@ -7,7 +7,7 @@
 ## Étapes
 
 1. **Ranger** : un dossier par vidéo, ex. `~/Videos/projet-x/`. Rushs dans un sous-dossier ou dans Téléchargements.
-2. **Transcrire** (demander à Claude ou lancer) :
+2. **Transcrire** (le plus simple : demander à Claude de le faire). Sur Windows, remplacer `.venv/bin/python` par `.venv\Scripts\python.exe` :
    ```
    ~/kit-claude/.venv/bin/python ~/kit-claude/outils/video/transcribe.py "/chemin/rushs" .
    ```

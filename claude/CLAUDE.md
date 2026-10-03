@@ -8,7 +8,7 @@ Je ne suis pas développeur : explique simplement quand c'est utile, sans jargon
 Toutes mes connaissances et le contexte de mes projets sont dans le vault Obsidian :
 
 ```
-~/Documents/Cerveau/
+~/Cerveau/  (dossier « Cerveau » dans le dossier utilisateur)
 ├── Mes Projets/      ← un sous-dossier par projet
 ├── Idées/            ← réflexions et brainstorms
 ```
@@ -48,3 +48,4 @@ Règles :
 - **Apify** : scraping Instagram (posts, commentaires, profils).
 - **Recettes** de nos workflows (montage vidéo, Shopify, présentations, veille X) : `~/kit-claude/recettes/`. Les lire avant de faire ce type de tâche.
 - **Outils vidéo** : `~/kit-claude/outils/video/` (transcription Whisper + montage ffmpeg + XML Premiere).
+  Python du kit : `~/kit-claude/.venv/bin/python` (Mac) ou `~/kit-claude/.venv/Scripts/python.exe` (Windows).

@@ -4,7 +4,7 @@
 Tu ne codes pas : tu **pilotes**. Tu décris le résultat voulu, Claude propose un plan, tu valides, il fait, tu vérifies. Ton job : avoir les idées, donner le contexte, juger le résultat.
 
 ## 2. Ouvrir Claude
-- Dans un terminal : va dans le dossier du projet (`cd ~/Projets/mon-site`) puis tape `claude`.
+- Dans un terminal (**PowerShell** sur Windows, **Terminal** sur Mac) : va dans le dossier du projet (`cd ~/Projets/mon-site`) puis tape `claude`.
 - Ou dans **Cursor / VS Code** avec l'extension Claude Code (le plus confortable).
 - Une conversation = un sujet. Nouveau sujet → `/clear`.
 
@@ -56,7 +56,7 @@ Dans `~/kit-claude/recettes/` :
 1. **Cerveau** : *« Crée un dossier projet "Mon portfolio" dans mon cerveau Obsidian et explique-moi chaque fichier. »*
 2. **Recherche X** : *« Cherche sur Twitter ce que les gens font avec Claude Code pour le montage vidéo. Résume en 5 points + ce que je pourrais tester. »*
 3. **Page web** : *« Crée-moi une page portfolio simple en HTML avec mes passions, propose le plan d'abord. »* Puis : *« mets-la sur GitHub »*, puis *« déploie-la sur Vercel »*.
-4. **Vidéo** : filme 3-4 rushs de toi qui parles (téléphone), puis suis `recettes/montage-video.md` pour en faire un reel de 45 s.
+4. **Vidéo** : filme 3-4 rushs de toi qui parles (téléphone), mets-les sur l'ordi, puis suis `recettes/montage-video.md` pour en faire un reel de 45 s.
 5. **Deck** : *« Fais-moi un PowerPoint de 6 slides qui présente mon projet de portfolio. »*
 6. **Sauvegarde** : à la fin, dis *« sauvegarde »* et va lire ton `Journal.md` dans Obsidian.
 

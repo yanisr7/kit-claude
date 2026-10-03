@@ -6,7 +6,7 @@
 #   SRC  = "/chemin/des/rushs"
 #   EDIT = [ ("nom_du_rush", debut_s, fin_s, "PARTIE", "ce qu'on entend"), ... ]
 # Les coupes sont recalées sur les mots (Whisper) pour ne jamais couper au milieu d'un mot.
-import json, os, sys, html, subprocess, urllib.parse
+import json, os, sys, html, subprocess, pathlib
 sys.path.insert(0, os.getcwd())
 from edit import SRC, EDIT
 
@@ -26,7 +26,7 @@ for name in {e[0] for e in EDIT}:
     p = rush(name)
     durs[name] = float(probe(p, "format=duration", False))
     dims[name] = tuple(int(x) for x in probe(p, "stream=width,height").split(","))
-    words[name] = [w for s in json.load(open(f"{name}.json"))["segments"] for w in s.get("words", [])] if os.path.exists(f"{name}.json") else []
+    words[name] = [w for s in json.load(open(f"{name}.json", encoding="utf-8"))["segments"] for w in s.get("words", [])] if os.path.exists(f"{name}.json") else []
 
 cuts, t = [], 0.0
 for name, a, b, part, label, *_ in EDIT:
@@ -46,7 +46,7 @@ for k, c in enumerate(cuts):
     fc.append(f"[{i}:a]atrim={c['a']:.3f}:{c['b']:.3f},asetpts=PTS-STARTPTS,afade=t=in:d=0.02,afade=t=out:st={c['b']-c['a']-0.03:.3f}:d=0.03[a{k}]")
     cat += f"[v{k}][a{k}]"
 fc.append(f"{cat}concat=n={len(cuts)}:v=1:a=1[v][araw];[araw]loudnorm=I=-14:TP=-1.5:LRA=11[a]")
-open("filtre.txt", "w").write(";\n".join(fc))
+open("filtre.txt", "w", encoding="utf-8").write(";\n".join(fc))
 cmd = ["ffmpeg", "-y", "-v", "error", "-stats"]
 for n in inputs: cmd += ["-i", rush(n)]
 cmd += ["-filter_complex_script", "filtre.txt", "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-crf", "19", "-preset", "medium", "-c:a", "aac", "-b:a", "192k", "montage.mp4"]
@@ -59,7 +59,7 @@ seen = set()
 def fileel(n):
     if n in seen: return f'<file id="f-{idx[n]}"/>'
     seen.add(n); w, h = dims[n]
-    return (f'<file id="f-{idx[n]}"><name>{html.escape(os.path.basename(rush(n)))}</name><pathurl>file://{urllib.parse.quote(rush(n))}</pathurl>{rate}<duration>{f(durs[n])}</duration>'
+    return (f'<file id="f-{idx[n]}"><name>{html.escape(os.path.basename(rush(n)))}</name><pathurl>{pathlib.Path(rush(n)).resolve().as_uri()}</pathurl>{rate}<duration>{f(durs[n])}</duration>'
             f'<media><video><samplecharacteristics>{rate}<width>{w}</width><height>{h}</height></samplecharacteristics></video>'
             f'<audio><samplecharacteristics><depth>16</depth><samplerate>48000</samplerate></samplecharacteristics><channelcount>2</channelcount></audio></media></file>')
 def scale(n): return 100 * max(OUT_W / dims[n][0], OUT_H / dims[n][1])
@@ -75,7 +75,7 @@ for k, c in enumerate(cuts):
     for cid, tr, lst in ((ids[1], 1, a1), (ids[2], 2, a2)):
         lst.append(f'<clipitem id="{cid}">{common}<file id="f-{idx[c["name"]]}"/><sourcetrack><mediatype>audio</mediatype><trackindex>{tr}</trackindex></sourcetrack>{links}</clipitem>')
 trk = lambda x: "<track>" + "".join(x) + "</track>"
-open("montage.xml", "w").write(
+open("montage.xml", "w", encoding="utf-8").write(
     '<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE xmeml>\n<xmeml version="4"><sequence id="seq"><name>Montage IA (éditable)</name>'
     f'<duration>{f(t)}</duration>{rate}<media><video><format><samplecharacteristics>{rate}<width>{OUT_W}</width><height>{OUT_H}</height>'
     f'<pixelaspectratio>square</pixelaspectratio></samplecharacteristics></format>{trk(v)}</video>'
@@ -83,5 +83,5 @@ open("montage.xml", "w").write(
 
 # 3) Plan de montage lisible
 rows = "".join(f"<tr><td>{k+1}</td><td>{int(c['t']//60)}:{int(c['t']%60):02d}</td><td><b>{html.escape(c['part'])}</b></td><td>{html.escape(c['label'])}</td><td>{c['b']-c['a']:.1f}s</td></tr>" for k, c in enumerate(cuts))
-open("plan.html", "w").write(f"<!doctype html><meta charset=utf-8><title>Plan de montage</title><style>body{{font-family:system-ui;max-width:900px;margin:30px auto;padding:0 16px}}td,th{{border-bottom:1px solid #ddd;padding:6px;text-align:left}}table{{border-collapse:collapse;width:100%}}</style><h1>Plan de montage</h1><p>{len(cuts)} coupes · {int(t//60)}:{int(t%60):02d}</p><table><tr><th>#</th><th>Temps</th><th>Partie</th><th>On entend</th><th>Durée</th></tr>{rows}</table>")
+open("plan.html", "w", encoding="utf-8").write(f"<!doctype html><meta charset=utf-8><title>Plan de montage</title><style>body{{font-family:system-ui;max-width:900px;margin:30px auto;padding:0 16px}}td,th{{border-bottom:1px solid #ddd;padding:6px;text-align:left}}table{{border-collapse:collapse;width:100%}}</style><h1>Plan de montage</h1><p>{len(cuts)} coupes · {int(t//60)}:{int(t%60):02d}</p><table><tr><th>#</th><th>Temps</th><th>Partie</th><th>On entend</th><th>Durée</th></tr>{rows}</table>")
 print("→ montage.mp4 · montage.xml (Premiere) · plan.html")
