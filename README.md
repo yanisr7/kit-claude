@@ -34,6 +34,4 @@ Ensuite :
 | `cerveau-modele/` | le modèle de vault Obsidian |
 
 ## Mettre à jour le kit
-```bash
 Relancer la même commande d'installation (elle remplace les fichiers du kit, ton cerveau Obsidian n'est pas touché).
-```
