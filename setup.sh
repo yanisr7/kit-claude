@@ -6,6 +6,8 @@ VAULT="$HOME/Documents/Cerveau"
 ok()   { printf "\033[32m✓\033[0m %s\n" "$1"; }
 step() { printf "\n\033[1m▸ %s\033[0m\n" "$1"; }
 
+# garde-fou : ne pas écraser la config Claude de Yanis
+if grep -q "User Profile — Yanis" ~/.claude/CLAUDE.md 2>/dev/null; then echo "Ce Mac a déjà la config de Yanis : installation annulée."; exit 1; fi
 [ "$(uname)" = "Darwin" ] || { echo "Ce kit est prévu pour macOS."; exit 1; }
 [ "$(uname -m)" = "arm64" ] || echo "⚠️  Mac Intel détecté : tout marche sauf la transcription vidéo rapide (mlx-whisper)."
 

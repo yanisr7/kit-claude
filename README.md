@@ -13,7 +13,7 @@ Tout ce qu'il faut pour que ton Claude travaille comme le mien : la façon de tr
 Ouvre l'app **Terminal** et colle :
 
 ```bash
-git clone https://github.com/yanisr7/kit-claude.git ~/kit-claude && bash ~/kit-claude/setup.sh
+mkdir -p ~/kit-claude && curl -L https://github.com/yanisr7/kit-claude/archive/refs/heads/main.tar.gz | tar xz -C ~/kit-claude --strip-components 1 && bash ~/kit-claude/setup.sh
 ```
 
 Le script installe Homebrew, Node, Python, ffmpeg, Claude Code, les plugins de skills, Obsidian et les outils vidéo, et il configure tout. Il te demandera ton mot de passe Mac (normal) et ta clé xAI (Entrée pour passer).
@@ -35,5 +35,5 @@ Ensuite :
 
 ## Mettre à jour le kit
 ```bash
-cd ~/kit-claude && git pull && bash setup.sh
+Relancer la même commande d'installation (elle remplace les fichiers du kit, ton cerveau Obsidian n'est pas touché).
 ```
